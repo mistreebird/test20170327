@@ -1,0 +1,53 @@
+<!DOCTYPE>
+
+<head>
+    <meta charset="UTF-8">
+    <!-- 載入 ElementUI css(Start) -->
+    <link rel="stylesheet" href="http://unpkg.com/element-ui@1.2.3/lib/theme-default/index.css">
+    <!-- 載入 ElementUI css(End) -->
+    <!-- 載入 Vue2(Start) -->
+    <script type="text/javascript" src="http://unpkg.com/vue@2.2.1/dist/vue.js"></script>
+    <!-- 載入 Vue2(End) -->
+    <!-- 載入 axios(Start) -->
+    <script src="http://unpkg.com/axios@0.15.3/dist/axios.min.js"></script>
+    <script type="text/javascript" src="./js/es6-promise.auto.min.js"></script>
+    <!-- 載入 axios(End) -->
+    <!-- 載入 ElementUI js(Start) -->
+    <script type="text/javascript" src="http://unpkg.com/element-ui@1.2.3/lib/index.js"></script>
+    <script type="text/javascript" src="http://unpkg.com/element-ui@1.2.3/lib/umd/locale/zh-TW.js"></script>
+    <!-- 載入 ElementUI js(End) -->
+</head>
+
+<body>
+    <div id="app">
+        <!-- 表格顯示 -->
+        <el-table :data="heroes" border style="width: 100%">
+            <el-table-column type="selection" width="55">
+            </el-table-column>
+            <el-table-column prop="INDEX_NO" label="編號" width="120">
+            </el-table-column>
+            <el-table-column prop="NAME" label="姓名" width="120">
+            </el-table-column>
+            <el-table-column prop="BIRTHDAY" label="生日" show-overflow-tooltip>
+            </el-table-column>
+        </el-table>
+    </div>
+
+    <script type="text/javascript">
+        var app = new Vue({
+            el: '#app',
+            mounted: function() {
+                //初始化
+            },
+            data: {
+                // API位置
+                herosUrl: "http://api.gt.web/api/heroes",
+                // 顯示的英雄們
+                heroes: [],
+            },
+            methods: {
+
+            }
+        });
+    </script>
+</body>
