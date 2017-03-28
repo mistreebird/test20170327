@@ -20,6 +20,9 @@
 
 <body>
     <div id="app" v-show="bMounted" style="display:none">
+        <!-- 按鈕區塊(Start) -->
+        <el-button type="primary" icon="plus" @click="handleShowCreate();">新增</el-button><br/><br/>
+        <!-- 按鈕區塊(Start) -->
         <!-- 表格顯示 -->
         <el-table :data="heroes" border style="width: 100%">
             <el-table-column type="selection" width="55">
@@ -34,6 +37,23 @@
                 </template>
             </el-table-column>
         </el-table>
+
+        <!-- 新增表單(Start) -->
+        <el-dialog title="新增英雄" v-model="bCreateVisible" :close-on-click-modal="false">
+            <el-form :model="hero">
+                <el-form-item label="姓名" label-width="120">
+                    <el-input v-model="hero.NAME" auto-complete="off" placeholder="请输入姓名"></el-input>
+                </el-form-item>
+                <el-form-item label="生日" label-width="120">
+                    <el-date-picker v-model="hero.BIRTHDAY" type="date" placeholder="請選擇生日" align="right" :editable="false" :clearable="false"></el-date-picker>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="bCreateVisible = false" class="el-button-margin">取消</el-button>
+                <el-button type="primary" @click="handleCreate" class="el-button-margin">確定</el-button>
+            </div>
+        </el-dialog>
+        <!-- 新增表單(End) -->
     </div>
 
     <script type="text/javascript">
@@ -59,18 +79,50 @@
                 herosUrl: "http://api.gt.web/api/heroes",
                 // 顯示的英雄們
                 heroes: [],
+                // 一位英雄
+                hero: {},
+                // 顯示新增視窗
+                bCreateVisible: false,
             },
             methods: {
                 loadData: function() {
                     var vm = this;
-                    csHttpClient.get(this.herosUrl).then(function(response) {
+                    csHttpClient.get(vm.herosUrl).then(function(response) {
                             vm.heroes = response.data;
                             console.log(response);
                         })
                         .catch(function(response) {
                             console.log(response.status);
                         });
+                },
+                // 點選新增
+                handleShowCreate: function() {
+                    this.hero = {
+                        'NAME': null,
+                        'BIRTHDAY': null
+                    };
+                    this.bCreateVisible = true;
+                },
+                // 新增資料
+                handleCreate: function() {
+                    var vm = this;
+                    csHttpClient.post(vm.herosUrl, vm.hero).then(function(response) {
+                            vm.loadData();
+                            vm.$message({
+                                type: 'success',
+                                message: '新增' + vm.hero.NAME + '成功，請繼續下一筆!'
+                            });
+                            vm.hero.NAME = null;
+                        })
+                        .catch(function(response) {
+                            vm.$message({
+                                type: 'error',
+                                message: '新增' + vm.hero.NAME + '失敗，請檢查相關欄位是否正確'
+                            });
+                            console.log(response.message);
+                        })
                 }
+
             }
         });
     </script>
