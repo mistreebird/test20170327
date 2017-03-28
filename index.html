@@ -29,16 +29,31 @@
             </el-table-column>
             <el-table-column prop="INDEX_NO" label="編號" width="120">
             </el-table-column>
-            <el-table-column prop="NAME" label="姓名" width="120">
+            <el-table-column prop="NAME" label="姓名">
+                <template scope="scope">
+                    <template v-if="scope.row.INDEX_NO != hero.INDEX_NO">
+                        {{ scope.row.NAME }}
+                    </template>
+                <template v-else>
+                        <el-input v-model="hero.NAME" auto-complete="off" placeholder="請輸入姓名" width="120"></el-input>
+                    </template>
+                </template>
             </el-table-column>
             <el-table-column label="生日" show-overflow-tooltip>
                 <template scope="scope">
-                    {{ scope.row.BIRTHDAY | toDate }}
+                    <template v-if="scope.row.INDEX_NO != hero.INDEX_NO">
+                        {{ scope.row.BIRTHDAY | toDate}}
+                    </template>
+                <template v-else>
+                       <el-date-picker v-model="hero.BIRTHDAY" type="date" placeholder="請選擇生日" align="right" :editable="false" :clearable="false"></el-date-picker>
+                    </template>
                 </template>
             </el-table-column>
             <el-table-column label="操作">
                 <template scope="scope">
-                        <el-button type="warning" icon="edit" @click="handleShowEdit(scope.$index, scope.row)"></el-button>
+                        <el-button type="primary" icon="check" @click="handleUpdate(true)" v-show="scope.row.INDEX_NO == hero.INDEX_NO"></el-button>
+                        <el-button type="warning" icon="close" @click="handleUpdate(false)" v-show="scope.row.INDEX_NO == hero.INDEX_NO"></el-button>
+                        <el-button type="warning" icon="edit" @click="handleShowEdit(scope.$index, scope.row)" v-show="scope.row.INDEX_NO != hero.INDEX_NO"></el-button>
                         <el-button type="danger" icon="delete" @click="handleDelete(scope.$index, scope.row)"></el-button>
                     </template>
             </el-table-column>
@@ -174,13 +189,35 @@
                 // 點選編輯
                 handleShowEdit: function(index, row) {
                     this.hero = row;
-                    this.bCreateVisible = true;
                 },
                 // 點選取消
                 handleCancel: function() {
                     this.bCreateVisible = false;
                     if (this.hero.INDEX_NO !== undefined) {
                         this.loadData();
+                    }
+                },
+                // 更新資料
+                handleUpdate: function(bUpdate) {
+                    var vm = this;
+                    if (bUpdate) {
+                        csHttpClient.put(vm.herosUrl + "/" + vm.hero.INDEX_NO, vm.hero).then(function(response) {
+                                vm.loadData();
+                                vm.$message({
+                                    type: 'success',
+                                    message: '更新' + vm.hero.NAME + '成功!'
+                                });
+                                vm.hero = {};
+                                vm.bCreateVisible = false;
+                            })
+                            .catch(function(response) {
+                                vm.$message({
+                                    type: 'error',
+                                    message: '更新' + vm.hero.NAME + '失敗，請檢查相關欄位是否正確'
+                                });
+                            })
+                    } else {
+                        vm.hero = {};
                     }
                 }
 
