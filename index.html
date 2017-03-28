@@ -38,6 +38,7 @@
             </el-table-column>
             <el-table-column label="操作">
                 <template scope="scope">
+                        <el-button type="warning" icon="edit" @click="handleShowEdit(scope.$index, scope.row)"></el-button>
                         <el-button type="danger" icon="delete" @click="handleDelete(scope.$index, scope.row)"></el-button>
                     </template>
             </el-table-column>
@@ -54,7 +55,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="bCreateVisible = false" class="el-button-margin">取消</el-button>
+                <el-button @click="handleCancel" class="el-button-margin">取消</el-button>
                 <el-button type="primary" @click="handleCreate" class="el-button-margin">確定</el-button>
             </div>
         </el-dialog>
@@ -111,21 +112,38 @@
                 // 新增資料
                 handleCreate: function() {
                     var vm = this;
-                    csHttpClient.post(vm.herosUrl, vm.hero).then(function(response) {
-                            vm.loadData();
-                            vm.$message({
-                                type: 'success',
-                                message: '新增' + vm.hero.NAME + '成功，請繼續下一筆!'
-                            });
-                            vm.hero.NAME = null;
-                        })
-                        .catch(function(response) {
-                            vm.$message({
-                                type: 'error',
-                                message: '新增' + vm.hero.NAME + '失敗，請檢查相關欄位是否正確'
-                            });
-                            console.log(response.message);
-                        })
+                    if (vm.hero.INDEX_NO === undefined) {
+                        csHttpClient.post(vm.herosUrl, vm.hero).then(function(response) {
+                                vm.loadData();
+                                vm.$message({
+                                    type: 'success',
+                                    message: '新增' + vm.hero.NAME + '成功，請繼續下一筆!'
+                                });
+                                vm.hero.NAME = null;
+                            })
+                            .catch(function(response) {
+                                vm.$message({
+                                    type: 'error',
+                                    message: '新增' + vm.hero.NAME + '失敗，請檢查相關欄位是否正確'
+                                });
+                            })
+                    } else {
+                        csHttpClient.put(vm.herosUrl + "/" + vm.hero.INDEX_NO, vm.hero).then(function(response) {
+                                vm.loadData();
+                                vm.$message({
+                                    type: 'success',
+                                    message: '更新' + vm.hero.NAME + '成功!'
+                                });
+                                vm.hero = {};
+                                vm.bCreateVisible = false;
+                            })
+                            .catch(function(response) {
+                                vm.$message({
+                                    type: 'error',
+                                    message: '更新' + vm.hero.NAME + '失敗，請檢查相關欄位是否正確'
+                                });
+                            })
+                    }
                 },
                 // 點選刪除
                 handleDelete: function(index, row) {
@@ -152,6 +170,18 @@
                             message: '已取消删除'
                         });
                     });
+                },
+                // 點選編輯
+                handleShowEdit: function(index, row) {
+                    this.hero = row;
+                    this.bCreateVisible = true;
+                },
+                // 點選取消
+                handleCancel: function() {
+                    this.bCreateVisible = false;
+                    if (this.hero.INDEX_NO !== undefined) {
+                        this.loadData();
+                    }
                 }
 
             }
