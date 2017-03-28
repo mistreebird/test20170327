@@ -19,7 +19,7 @@
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" v-show="bMounted" style="display:none">
         <!-- 表格顯示 -->
         <el-table :data="heroes" border style="width: 100%">
             <el-table-column type="selection" width="55">
@@ -40,10 +40,31 @@
                 //初始化
             },
             data: {
+                bMounted: true,
                 // API位置
                 herosUrl: "http://api.gt.web/api/heroes",
                 // 顯示的英雄們
-                heroes: [],
+                heroes: [{
+                    "INDEX_NO": 6,
+                    "NAME": "damonhou",
+                    "BIRTHDAY": "2016-11-12T00:00:00"
+                }, {
+                    "INDEX_NO": 7,
+                    "NAME": "yaya736",
+                    "BIRTHDAY": "2006-11-09T00:00:00"
+                }, {
+                    "INDEX_NO": 12,
+                    "NAME": "test00343",
+                    "BIRTHDAY": "2016-11-10T00:00:00"
+                }, {
+                    "INDEX_NO": 16,
+                    "NAME": "Hero0301",
+                    "BIRTHDAY": "2017-03-01T00:00:00"
+                }, {
+                    "INDEX_NO": 17,
+                    "NAME": "Hero0302",
+                    "BIRTHDAY": "2011-03-17T00:00:00"
+                }],
             },
             methods: {
 
