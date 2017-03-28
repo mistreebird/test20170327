@@ -36,6 +36,11 @@
                     {{ scope.row.BIRTHDAY | toDate }}
                 </template>
             </el-table-column>
+            <el-table-column label="操作">
+                <template scope="scope">
+                        <el-button type="danger" icon="delete" @click="handleDelete(scope.$index, scope.row)"></el-button>
+                    </template>
+            </el-table-column>
         </el-table>
 
         <!-- 新增表單(Start) -->
@@ -121,6 +126,32 @@
                             });
                             console.log(response.message);
                         })
+                },
+                // 點選刪除
+                handleDelete: function(index, row) {
+                    var vm = this;
+                    vm.$confirm('您確定要刪除' + row.NAME + '嗎?', '提示', {
+                        confirmButtonText: '確定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(function() {
+                        csHttpClient.delete(vm.herosUrl + "/" + row.INDEX_NO).then(function(response) {
+                                vm.loadData();
+                                vm.$message({
+                                    type: 'success',
+                                    message: '删除' + row.NAME + '成功!'
+                                });
+                            })
+                            .catch(function(response) {
+                                console.log(response.status)
+                            })
+
+                    }).catch(function() {
+                        vm.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
                 }
 
             }
