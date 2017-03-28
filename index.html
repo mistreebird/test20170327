@@ -34,40 +34,35 @@
     </div>
 
     <script type="text/javascript">
+        // 定義http連線物件
+        var csHttpClient = axios.create({
+            //xsrfHeaderName: 'X-CSRF-Token',
+            //withCredentials: true
+        });
+
         var app = new Vue({
             el: '#app',
             mounted: function() {
                 //初始化
+                this.loadData();
             },
             data: {
                 bMounted: true,
                 // API位置
                 herosUrl: "http://api.gt.web/api/heroes",
                 // 顯示的英雄們
-                heroes: [{
-                    "INDEX_NO": 6,
-                    "NAME": "damonhou",
-                    "BIRTHDAY": "2016-11-12T00:00:00"
-                }, {
-                    "INDEX_NO": 7,
-                    "NAME": "yaya736",
-                    "BIRTHDAY": "2006-11-09T00:00:00"
-                }, {
-                    "INDEX_NO": 12,
-                    "NAME": "test00343",
-                    "BIRTHDAY": "2016-11-10T00:00:00"
-                }, {
-                    "INDEX_NO": 16,
-                    "NAME": "Hero0301",
-                    "BIRTHDAY": "2017-03-01T00:00:00"
-                }, {
-                    "INDEX_NO": 17,
-                    "NAME": "Hero0302",
-                    "BIRTHDAY": "2011-03-17T00:00:00"
-                }],
+                heroes: [],
             },
             methods: {
-
+                loadData() {
+                    csHttpClient.get(this.herosUrl, null).then((response) => {
+                            this.heroes = response.data;
+                            console.log(response);
+                        })
+                        .catch(function(response) {
+                            console.log(response.status)
+                        })
+                }
             }
         });
     </script>
