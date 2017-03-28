@@ -54,14 +54,15 @@
                 heroes: [],
             },
             methods: {
-                loadData() {
-                    csHttpClient.get(this.herosUrl, null).then((response) => {
-                            this.heroes = response.data;
+                loadData: function() {
+                    var vm = this;
+                    csHttpClient.get(this.herosUrl).then(function(response) {
+                            vm.heroes = response.data;
                             console.log(response);
                         })
                         .catch(function(response) {
-                            console.log(response.status)
-                        })
+                            console.log(response.status);
+                        });
                 }
             }
         });
