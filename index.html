@@ -45,7 +45,7 @@
                         {{ scope.row.BIRTHDAY | toDate}}
                     </template>
                 <template v-else>
-                       <el-date-picker v-model="hero.BIRTHDAY" type="date" placeholder="請選擇生日" align="right" :editable="false" :clearable="false"></el-date-picker>
+                        <tb-datepicker v-model="hero.BIRTHDAY" placeholder="請選擇生日" @change="changeBirthday"></tb-datepicker>
                     </template>
                 </template>
             </el-table-column>
@@ -66,7 +66,7 @@
                     <el-input v-model="hero.NAME" auto-complete="off" placeholder="请输入姓名"></el-input>
                 </el-form-item>
                 <el-form-item label="生日" label-width="120">
-                    <el-date-picker v-model="hero.BIRTHDAY" type="date" placeholder="請選擇生日" align="right" :editable="false" :clearable="false"></el-date-picker>
+                    <tb-datepicker v-model="hero.BIRTHDAY" placeholder="請選擇生日" @change="changeBirthday"></tb-datepicker>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -81,6 +81,23 @@
         Vue.filter('toDate', function(val) {
             return val.substring(0, 10);
         });
+
+        Vue.component('tb-datepicker', {
+            template: '<el-date-picker v-model="value" type="date" :placeholder="placeholder" align="right" :editable="false" :clearable="false" @change="changeDate"></el-date-picker>',
+            data: function() {
+                return {
+                    value: ''
+                }
+            },
+            props: ['placeholder'],
+            methods: {
+                changeDate: function(val) {
+                    this.$emit('change', this.value, val);
+                    this.value = val;
+                    console.log(this.value);
+                }
+            }
+        })
 
         // 定義http連線物件
         var csHttpClient = axios.create({
@@ -219,6 +236,11 @@
                     } else {
                         vm.hero = {};
                     }
+                },
+                //更換生日
+                changeBirthday: function(objDate, strDate) {
+                    console.log(objDate);
+                    console.log(strDate);
                 }
 
             }
