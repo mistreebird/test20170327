@@ -28,12 +28,19 @@
             </el-table-column>
             <el-table-column prop="NAME" label="姓名" width="120">
             </el-table-column>
-            <el-table-column prop="BIRTHDAY" label="生日" show-overflow-tooltip>
+            <el-table-column label="生日" show-overflow-tooltip>
+                <template scope="scope">
+                    {{ scope.row.BIRTHDAY | toDate }}
+                </template>
             </el-table-column>
         </el-table>
     </div>
 
     <script type="text/javascript">
+        Vue.filter('toDate', function(val) {
+            return val.substring(0, 10);
+        });
+
         // 定義http連線物件
         var csHttpClient = axios.create({
             //xsrfHeaderName: 'X-CSRF-Token',
