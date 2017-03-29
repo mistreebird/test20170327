@@ -83,21 +83,23 @@
         });
 
         Vue.component('tb-datepicker', {
-            template: '<el-date-picker v-model="value" type="date" :placeholder="placeholder" align="right" :editable="false" :clearable="false" @change="changeDate"></el-date-picker>',
-            data: function() {
+            template: '<el-date-picker v-model="subValue" type="date" :placeholder="placeholder" align="right" :editable="false" :clearable="false" @change="changeDate"></el-date-picker>',
+            data() {
                 return {
-                    value: ''
+                    subValue: ''
                 }
             },
-            props: ['placeholder'],
+            props: ['value', 'placeholder'],
+            mounted: function() {
+                this.subValue = this.value;
+            },
             methods: {
                 changeDate: function(val) {
-                    this.$emit('change', this.value, val);
-                    this.value = val;
-                    console.log(this.value);
+                    this.$emit('change', this.subValue, val);
+                    this.$emit('input', val);
                 }
             }
-        })
+        });
 
         // 定義http連線物件
         var csHttpClient = axios.create({
@@ -239,6 +241,7 @@
                 },
                 //更換生日
                 changeBirthday: function(objDate, strDate) {
+                    // 看變化
                     console.log(objDate);
                     console.log(strDate);
                 }

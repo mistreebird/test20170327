@@ -1,0 +1,33 @@
+<!DOCTYPE>
+
+<head>
+    <meta charset="UTF-8">
+    <!-- 載入 Vue2(Start) -->
+    <script type="text/javascript" src="http://unpkg.com/vue@2.2.1/dist/vue.js"></script>
+    <!-- 載入 Vue2(End) -->
+</head>
+
+<body>
+    <div id="app">
+        <tb-input v-model="testvalue"></tb-input>
+        {{testvalue}}
+    </div>
+    <script>
+        Vue.component('tb-input', {
+            template: '<input v-model="value" type="text" @keyup="changeDate"></input>',
+            props: ['value', 'placeholder'],
+            methods: {
+                changeDate: function($event) {
+                    this.$emit('input', $event.target.value);
+                }
+            }
+        })
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                testvalue: 'xxx'
+            }
+        });
+    </script>
+</body>
